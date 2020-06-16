@@ -32,7 +32,7 @@
   "show_diagnostics_severity_level": 4,
 
   // Highlighting style of code diagnostics.
-  // Valid values are "underline" or "box"
+  // Valid values are "underline", "squiggly", or "box"
   "diagnostics_highlight_style": "underline",
 
   // Highlighting style of "highlights": accentuating nearby text entities that

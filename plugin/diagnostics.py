@@ -28,11 +28,6 @@ diagnostic_severity_scopes = {
     DiagnosticSeverity.Hint: 'markup.inserted.lsp sublimelinter.gutter-mark markup.info.suggestion.lsp'
 }
 
-UNDERLINE_FLAGS = (sublime.DRAW_SQUIGGLY_UNDERLINE | sublime.DRAW_NO_OUTLINE | sublime.DRAW_NO_FILL |
-                   sublime.DRAW_EMPTY_AS_OVERWRITE)
-
-BOX_FLAGS = sublime.DRAW_NO_FILL | sublime.DRAW_EMPTY_AS_OVERWRITE
-
 
 def format_severity(severity: int) -> str:
     return diagnostic_severity_names.get(severity, "???")
@@ -267,9 +262,16 @@ class DiagnosticViewRegions(DiagnosticsUpdateWalk):
                     icon = diagnostic_severity_icons[severity]
                 else:
                     icon = settings.diagnostics_gutter_marker
+                flags = sublime.DRAW_NO_FILL | sublime.DRAW_EMPTY_AS_OVERWRITE
+                if settings.diagnostics_highlight_style == "underline":
+                    flags |= sublime.DRAW_SOLID_UNDERLINE
+                    flags |= sublime.DRAW_NO_OUTLINE
+                elif settings.diagnostics_highlight_style == "squiggly":
+                    flags |= sublime.DRAW_SQUIGGLY_UNDERLINE
+                    flags |= sublime.DRAW_NO_OUTLINE
+
                 self._view.add_regions(
-                    region_name, regions, scope_name, icon,
-                    UNDERLINE_FLAGS if settings.diagnostics_highlight_style == "underline" else BOX_FLAGS)
+                    region_name, regions, scope_name, icon, flags=flags)
             else:
                 self._view.erase_regions(region_name)
 
